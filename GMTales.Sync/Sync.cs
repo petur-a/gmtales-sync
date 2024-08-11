@@ -53,11 +53,11 @@ public partial class Sync
 
             if (articleExists)
             {
-                await SendPutAsync("api/campaign/1/article", title, markdownContent, token);
+                await SendPutAsync($"api/campaign/{_settings.Campaign}/article", title, markdownContent, token);
             }
             else
             {
-                await SendPostAsync("api/campaign/1/article", title, markdownContent, token);
+                await SendPostAsync($"api/campaign/{_settings.Campaign}/article", title, markdownContent, token);
             }
         }
     }
@@ -114,7 +114,7 @@ public partial class Sync
         content.Add(new StringContent(imageName), "fileName");
 
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.PostAsync("api/campaign/1/images", content);
+        var response = await _client.PostAsync($"api/campaign/{_settings.Campaign}/images", content);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -125,7 +125,7 @@ public partial class Sync
 
     private async Task<bool> CheckArticleExists(string title)
     {
-        var existingArticle = await _client.GetAsync($"api/campaign/1/article/title?title={title}");
+        var existingArticle = await _client.GetAsync($"api/campaign/{_settings.Campaign}/article/title?title={title}");
         return existingArticle.IsSuccessStatusCode;
     }
 
@@ -134,7 +134,7 @@ public partial class Sync
         var imageName = Path.GetFileName(imagePath);
 
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        var response = await _client.GetAsync($"api/campaign/1/images/path/{imageName}");
+        var response = await _client.GetAsync($"api/campaign/{_settings.Campaign}/images/path/{imageName}");
         return response.IsSuccessStatusCode;
     }
 
@@ -168,7 +168,6 @@ public partial class Sync
     {
         return Directory.EnumerateFiles(folderPath, "*.md", SearchOption.AllDirectories);
     }
-
 
     [GeneratedRegex(@"^#\s+(.+)$", RegexOptions.Multiline)]
     private static partial Regex TitleRegex();
