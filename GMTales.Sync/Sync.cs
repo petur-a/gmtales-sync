@@ -125,7 +125,7 @@ public partial class Sync
 
     private async Task<bool> CheckArticleExists(string title)
     {
-        var existingArticle = await _client.GetAsync($"api/campaign/{_settings.Campaign}/article/title?title={title}");
+        var existingArticle = await _client.GetAsync($"api/campaign/{_settings.Campaign}/article/single?method=title&key={title}");
         return existingArticle.IsSuccessStatusCode;
     }
 
